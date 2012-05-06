@@ -1,0 +1,39 @@
+*************************************************************************************************
+LICENSE
+Simplified BSD License
+
+AUTHOR
+Yu Renbi
+
+E-mail
+averybigant[AT]gmail.com
+*************************************************************************************************
+INTRODUCTION
+shucg.vim is a vim plugin for the class of 2011 students of Shanghai University to interact with 
+the CourseGrading system in vim. But it should work with any other CourseGrading sites.
+
+The official site of the CourseGrading system: course.sei.buaa.edu.cn
+
+The pcg.py can be used as a normal python module to interact with the CourseGrading system.
+pcg.py depends on the BeautifulSoup4 module and the poster module.
+The assemble.sh is merely a simple bash script to combine LICENSE declaration, pcg.py and vcg.vim
+and produce the shucg.vim file.
+
+shucg.vim require vim compiled with +python option to run.
+*************************************************************************************************
+USAGE
+
+On Ubuntu12.04
+
+sudo apt-get install python-setuptools
+sudo easy_install pip
+sudo pip install bs4
+sudo pip install poster
+
+copy the shucg.vim file to ~/.vim/plugin
+open shucg.vim with a text editor
+find the "======CONFIGURE YOUR ACCOUNT HERE!!======" line
+change USERNAME, PASSWORD, SITEURL, SCOPE for yours
+**THE PLUGIN WILL TAKE EFFECT ONLY WHEN THE WORK DIRECTORY IS THE SAME AS SCOPE**
+
+*************************************************************************************************

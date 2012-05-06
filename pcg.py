@@ -18,8 +18,9 @@ except ImportError:
 USERNAME = "11121281"
 PASSWORD = "Yu221250"
 SITEURL = "http://program3.ccshu.net/"
+SCOPE = "/home/averybigant/Documents/C_HKL"
 #======SOME CONFIGURATION FOR CUSTOMIZE===
-TRYTIMES = 3
+TRYTIMES = 5
 SHOWTRY = True
 DEBUG = False
 #=========================================
@@ -211,7 +212,7 @@ class Chapter(object):
 		print self.get_info()
 		for tup in asmlist:
 			if tup[2] == 0:
-				stat = "未过"
+				stat = "未传"
 			elif tup[2] == 1:
 				stat = "做错"
 			else:
@@ -246,7 +247,7 @@ class Assignment(object):
 
 	def print_description(self):
 		if self.status == 0:
-			stat = "未过"
+			stat = "未传"
 		elif self.status == 1:
 			stat = "做错"
 		else:

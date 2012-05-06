@@ -1,3 +1,12 @@
+"Copyright (c) 2012, Yu Renbi
+"All rights reserved.
+
+"Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+"Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+"Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+"THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 python << EndPy
 #!/usr/bin/python 
 #coding=utf-8
@@ -19,8 +28,9 @@ except ImportError:
 USERNAME = "11121281"
 PASSWORD = "Yu221250"
 SITEURL = "http://program3.ccshu.net/"
+SCOPE = "/home/averybigant/Documents/C_HKL"
 #======SOME CONFIGURATION FOR CUSTOMIZE===
-TRYTIMES = 3
+TRYTIMES = 5
 SHOWTRY = True
 DEBUG = False
 #=========================================
@@ -212,7 +222,7 @@ class Chapter(object):
 		print self.get_info()
 		for tup in asmlist:
 			if tup[2] == 0:
-				stat = "未过"
+				stat = "未传"
 			elif tup[2] == 1:
 				stat = "做错"
 			else:
@@ -247,7 +257,7 @@ class Assignment(object):
 
 	def print_description(self):
 		if self.status == 0:
-			stat = "未过"
+			stat = "未传"
 		elif self.status == 1:
 			stat = "做错"
 		else:
@@ -360,20 +370,34 @@ EndPy
 "=====VIML_BEGIN=====
 
 
+let s:scope = 0
+
+python << endpy
+import vim
+crt_dir = vim.eval('system("pwd")')
+crt_dir = crt_dir.strip()
+SCOPE = SCOPE.strip()
+if crt_dir:
+	if SCOPE == crt_dir: vim.command("let s:scope = 1")
+#vim.command("let s:scope = 1")
+endpy
+if !s:scope
+	finish
+endif
+
 if !has('python')
 	echo "ERROR: Require vim compiled with +python"
 	finish
 endif
 
-
 "initialize
 python << endpy
-import vim
-print "hello~welcome to use CGinVIM~"
+print "CGinVIM author:averybigant@gmail.com"
+print "copyright:Simplified BSD License"
 cg = CG(SITEURL)
 crt_chp = None
 crt_asm = None
-cg.login(USERNAME, PASSWORD)
+if cg.login(USERNAME, PASSWORD): print "Login successful!"
 endpy
 
 function! Cgv_showclass()
@@ -450,3 +474,35 @@ if not crt_asm:
 crt_asm.print_upstat()
 endpy 
 endfunction
+
+function! Cgv_addhead()
+python << endpy 
+if not crt_asm:
+	print "please use Cgv_setasm(asmid) set assignment first!"
+	vim.command('return 1')	
+#reverse
+vim.current.buffer.append('//' + '=' * 42, 0)
+vim.current.buffer.append('//Time:%s' % vim.eval('system("date")'), 0)
+vim.current.buffer.append('//Author:%s' % cg.usr, 0)
+vim.current.buffer.append('//Title:%s' % crt_asm.name.encode('utf-8'), 0)
+#vim.current.window.cursor = (4, 0)
+endpy 
+endfunction
+
+"some macros
+"printf
+let @p = '0iprintf("�@7",);F,'
+"printf with \n
+let @o = '0iprintf("�@7\n",);F,'
+"scanf
+let @l = '0iscanf*�kb("�@7",);F,'
+
+"command
+
+command! -nargs=0 Chapter call Cgv_chapter()
+command! -nargs=1 Setasm call Cgv_setasm(<args>)
+command! -nargs=1 Setchapter call Cgv_setchapter(<args>)
+command! -nargs=0 Addhead call Cgv_addhead()
+
+map <f7> :call Cgv_showcurrent()<CR>
+map <f8> :call Cgv_uploadcurrentfile()<CR>
