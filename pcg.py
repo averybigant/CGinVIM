@@ -3,7 +3,6 @@
 
 import urllib,urllib2
 from cookielib import CookieJar
-#import vim
 
 try:
 	from bs4 import BeautifulSoup
@@ -255,22 +254,38 @@ class Assignment(object):
 		request = urllib2.Request(self._uploadurl, datagen, headers)
 		soup = BeautifulSoup(urllib2.urlopen(request).read())
 		if not self.chp.CG._check_login(soup): return LoginError
-		self._lastuploadstat = soup.find('td', height="100%").get_text()
+		self._lastuploadstat = soup.find('td', height="100%").stripped_strings
+		self._lastuploadstat = [text for text in self._lastuploadstat]
 	
 	def print_upstat(self):
 		if not self._lastuploadstat:
 			print "本次会话目前为止没有成功的上传"
 		else:
-			print self._lastuploadstat
+			head = self._lastuploadstat[:3]
+			content = self._lastuploadstat[3:]
+			print self.name
+			for l in head:
+				print l
+			for i in range(0,len(content) / 2):
+				this = 2 * i 
+				print "%s\t%s" % (content[this],content[this + 1])
 
 
 
+#=============SOME INPUT ASSIST FUNCTION=========================
+#they all return a list to insert into vim.current.buffer
 
-		
+#def input_single_variable(varname,tip=None, outname = None):
+	#if not outname:
+		#outname = varname
+	#if not tip:
+		#tip = "Input %s: "
+	#rlist = []
+	#rlist.append('printf("
 
 
-	
-	
+
+#================================================================	
 
 
 def main():
