@@ -21,7 +21,7 @@ and produce the shucg.vim file.
 
 shucg.vim require vim compiled with +python option to run.
 *************************************************************************************************
-USAGE
+INSTALLATION
 
 On Ubuntu12.04
 
